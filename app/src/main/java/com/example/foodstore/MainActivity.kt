@@ -20,6 +20,7 @@ class MainActivity : AppCompatActivity(),FoodAdapter.FoodEvent {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        Toast.makeText(this, "commit", Toast.LENGTH_SHORT).show()
         val foodList = arrayListOf<Food>(
             Food(
                 "Pizza",
