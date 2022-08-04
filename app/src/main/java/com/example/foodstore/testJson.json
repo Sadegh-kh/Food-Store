@@ -1,0 +1,26 @@
+[
+  {
+    "name": "Sadegh",
+    "familyName" : "Khoshbayan",
+    "age" : 20,
+    "isMarried": false,
+    "passCourses": 55,
+    "nameOfTeacher": null
+  },
+  {
+    "name": "amir",
+    "familyName" : "Khoshbayan",
+    "age" : 23,
+    "isMarried": true,
+    "passCourses": 100,
+    "nameOfTeacher": null
+  },
+  {
+    "name": "saeed",
+    "familyName" : "Khoshbayan",
+    "age" : 22,
+    "isMarried": false,
+    "passCourses": 64,
+    "nameOfTeacher": null
+  }
+]

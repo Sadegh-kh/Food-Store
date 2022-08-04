@@ -4,7 +4,8 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Job/android/FoodStore/app/src/main/res/drawable/shape_circle.xml" value="0.1575" />
-        <entry key="..\:/Job/android/FoodStore/app/src/main/res/layout/activity_main.xml" value="0.2" />
+        <entry key="..\:/Job/android/FoodStore/app/src/main/res/drawable/shape_toolbar.xml" value="0.1575" />
+        <entry key="..\:/Job/android/FoodStore/app/src/main/res/layout/activity_main.xml" value="0.264" />
         <entry key="..\:/Job/android/FoodStore/app/src/main/res/layout/dialog_add_new_item.xml" value="0.20863616930312098" />
         <entry key="..\:/Job/android/FoodStore/app/src/main/res/layout/dialog_delete_item.xml" value="0.176" />
         <entry key="..\:/Job/android/FoodStore/app/src/main/res/layout/dialog_update_item.xml" value="0.20863616930312098" />

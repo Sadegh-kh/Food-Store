@@ -1,61 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
     <LinearLayout
-        android:elevation="8dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="?attr/colorPrimary">
+        android:background="@drawable/shape_toolbar"
+        android:elevation="8dp"
+        android:orientation="vertical">
+
         <FrameLayout
-            android:paddingStart="12dp"
-            android:paddingEnd="12dp"
             android:layout_width="match_parent"
-            android:layout_height="56dp">
+            android:layout_height="56dp"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp">
+
             <ImageView
                 android:id="@+id/btn_add_new_food"
-                app:srcCompat="@drawable/ic_baseline_add_circle_24"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_gravity="end|center_vertical"
+                app:srcCompat="@drawable/ic_baseline_add_circle_24"
                 app:tint="@color/white" />
+
+            <ImageView
+                android:id="@+id/btn_delete_all_food"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="end|center_vertical"
+                android:layout_marginEnd="36dp"
+                app:srcCompat="@drawable/ic_clear_all"
+                app:tint="@color/white" />
+
             <TextView
-                android:layout_gravity="start|center_vertical"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="start|center_vertical"
+                android:fontFamily="@font/product_sans_regular"
                 android:text="Food Store"
                 android:textColor="@color/white"
-                android:fontFamily="@font/product_sans_regular"
-                android:textSize="26sp"/>
+                android:textSize="26sp" />
 
         </FrameLayout>
+
         <EditText
             android:id="@+id/edit_search"
-            android:background="@drawable/shape_circle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:layout_marginEnd="12dp"
             android:layout_marginBottom="12dp"
-            android:padding="8dp"
+            android:background="@drawable/shape_circle"
             android:drawableStart="@drawable/ic_baseline_search_24"
             android:drawablePadding="8dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="find food ..."/>
+            android:hint="find food ..."
+            android:padding="8dp" />
 
     </LinearLayout>
+
     <androidx.recyclerview.widget.RecyclerView
-        android:background="?attr/colorSurface"
-        tools:listitem="@layout/item_food"
         android:id="@+id/recyvlerMain"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
+        android:layout_height="wrap_content"
+        android:background="?attr/colorSurface"
+        android:layoutAnimation="@anim/recycler"
+        tools:listitem="@layout/item_food" />
 
 
 </LinearLayout>
