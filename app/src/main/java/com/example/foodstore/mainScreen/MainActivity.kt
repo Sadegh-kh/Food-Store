@@ -18,15 +18,15 @@ import com.example.foodstore.model.FoodDao
 import com.example.foodstore.model.MyDatabase
 import com.example.foodstore.until.showToast
 
-class MainActivity : AppCompatActivity(), FoodAdapter.FoodEvent,MainScreenContract.View {
+class MainActivity : AppCompatActivity(), FoodAdapter.FoodEvent, MainScreenContract.View {
     private lateinit var binding: ActivityMainBinding
     private lateinit var myAdapter: FoodAdapter
     private lateinit var presenter: MainScreenContract.Presenter
-    private lateinit var foodList:ArrayList<Food>
+    private lateinit var foodList: ArrayList<Food>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
-        presenter=MainScreenPresenter(MyDatabase.getDatabase(this).foodDao)
+        presenter = MainScreenPresenter(MyDatabase.getDatabase(this).foodDao)
         setContentView(binding.root)
         presenter.onAttach(this)
         val sharedPreferences = getSharedPreferences("FoodStore", Context.MODE_PRIVATE)
@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity(), FoodAdapter.FoodEvent,MainScreenContra
 
 
         binding.btnDeleteAllFood.setOnClickListener {
-         presenter.onDeleteAllClicked()
+            presenter.onDeleteAllClicked()
         }
 
         binding.btnAddNewFood.setOnClickListener {
@@ -93,7 +93,7 @@ class MainActivity : AppCompatActivity(), FoodAdapter.FoodEvent,MainScreenContra
                 binding.recyvlerMain.scrollToPosition(0)
 
             } else {
-               showToast("لفطفا همه فیلد ها را پر کنید")
+                showToast("لفطفا همه فیلد ها را پر کنید")
             }
 
         }
@@ -137,7 +137,7 @@ class MainActivity : AppCompatActivity(), FoodAdapter.FoodEvent,MainScreenContra
                     numOfRating = food.numOfRating,
                     rating = food.rating
                 )
-                presenter.onUpdateFood(newFood,position)
+                presenter.onUpdateFood(newFood, position)
                 dialog.dismiss()
             } else {
                 showToast("لطفا همه فیلد هارا پر کنید")
@@ -146,6 +146,7 @@ class MainActivity : AppCompatActivity(), FoodAdapter.FoodEvent,MainScreenContra
 
         }
     }
+
     override fun onFoodLongClickend(food: Food, position: Int) {
         val dialog = AlertDialog.Builder(this).create()
 
@@ -157,30 +158,35 @@ class MainActivity : AppCompatActivity(), FoodAdapter.FoodEvent,MainScreenContra
             dialog.dismiss()
         }
         dialogDeleteBinding.dialogBtnDeleteYes.setOnClickListener {
-            presenter.onDeleteFood(food,position)
+            presenter.onDeleteFood(food, position)
             dialog.dismiss()
         }
     }
 
     //Contract interface
     override fun showFoods(data: List<Food>) {
-        foodList= ArrayList(data)
-        myAdapter= FoodAdapter(ArrayList(data),this)
-        binding.recyvlerMain.adapter=myAdapter
-        binding.recyvlerMain.layoutManager=LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false)
+        foodList = ArrayList(data)
+        myAdapter = FoodAdapter(ArrayList(data), this)
+        binding.recyvlerMain.adapter = myAdapter
+        binding.recyvlerMain.layoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
 
     }
+
     override fun refreshFoods(data: List<Food>) {
         myAdapter.setData(ArrayList(data))
     }
+
     override fun addNewFood(newFood: Food) {
         myAdapter.addFood(newFood)
     }
+
     override fun deleteFood(oldFood: Food, pos: Int) {
-        myAdapter.removeFood(oldFood,pos)
+        myAdapter.removeFood(oldFood, pos)
     }
+
     override fun updateFood(editingFood: Food, pos: Int) {
-        myAdapter.updateFood(editingFood,pos)
+        myAdapter.updateFood(editingFood, pos)
     }
 
 }

@@ -1,14 +1,13 @@
 package com.example.foodstore.mainScreen
 
 import com.example.foodstore.model.Food
+import com.example.foodstore.until.BasePresenter
 
 
 interface MainScreenContract {
 
-    interface Presenter{
+    interface Presenter:BasePresenter<View>{
         fun firstRun()
-        fun onAttach(view: View)
-        fun onDetach()
         fun onSearchFood(filter: String)
         fun onAddNewFoodClicked(food: Food)
         fun onDeleteAllClicked()
