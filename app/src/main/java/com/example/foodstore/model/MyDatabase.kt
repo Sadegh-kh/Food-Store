@@ -1,4 +1,4 @@
-package com.example.foodstore.room
+package com.example.foodstore.model
 
 import android.content.Context
 import androidx.room.Database
@@ -13,7 +13,7 @@ abstract class MyDatabase :RoomDatabase() {
     companion object{
         private var dataBase : MyDatabase? = null
 
-        fun getDatabase(context:Context):MyDatabase{
+        fun getDatabase(context:Context): MyDatabase {
             if (dataBase == null ){
                  dataBase = Room.databaseBuilder(
                      context.applicationContext,

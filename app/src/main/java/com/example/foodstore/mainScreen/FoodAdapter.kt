@@ -1,12 +1,13 @@
-package com.example.foodstore
+package com.example.foodstore.mainScreen
 
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.foodstore.R
 import com.example.foodstore.databinding.ItemFoodBinding
-import com.example.foodstore.room.Food
+import com.example.foodstore.model.Food
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation
 
 class FoodAdapter(private val data: ArrayList<Food>, private val foodEvents: FoodEvent) :

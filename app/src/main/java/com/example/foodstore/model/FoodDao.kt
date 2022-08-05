@@ -1,4 +1,4 @@
-package com.example.foodstore.room
+package com.example.foodstore.model
 
 import androidx.room.*
 

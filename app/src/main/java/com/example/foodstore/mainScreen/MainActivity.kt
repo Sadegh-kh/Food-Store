@@ -1,4 +1,4 @@
-package com.example.foodstore
+package com.example.foodstore.mainScreen
 
 import android.content.Context
 import android.os.Bundle
@@ -13,9 +13,9 @@ import com.example.foodstore.databinding.ActivityMainBinding
 import com.example.foodstore.databinding.DialogAddNewItemBinding
 import com.example.foodstore.databinding.DialogDeleteItemBinding
 import com.example.foodstore.databinding.DialogUpdateItemBinding
-import com.example.foodstore.room.Food
-import com.example.foodstore.room.FoodDao
-import com.example.foodstore.room.MyDatabase
+import com.example.foodstore.model.Food
+import com.example.foodstore.model.FoodDao
+import com.example.foodstore.model.MyDatabase
 
 class MainActivity : AppCompatActivity(), FoodAdapter.FoodEvent {
     lateinit var foodDao: FoodDao
