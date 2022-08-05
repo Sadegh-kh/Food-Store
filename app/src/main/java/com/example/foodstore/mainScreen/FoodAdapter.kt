@@ -76,7 +76,6 @@ class FoodAdapter(private val data: ArrayList<Food>, private val foodEvents: Foo
 
     fun removeFood(oldFood: Food, oldPosition: Int) {
         //remove item from list:
-
         data.remove(oldFood)
         notifyItemRemoved(oldPosition)
     }
@@ -95,7 +94,7 @@ class FoodAdapter(private val data: ArrayList<Food>, private val foodEvents: Foo
 
     interface FoodEvent {
         //1. create interface in adapter
-        //2.get an objaect of interface in args of adapter
+        //2.get an object of interface in args of adapter
         //3.fill(call) object of interface with your data
         //4.implementation in MainActivity
 

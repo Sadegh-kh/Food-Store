@@ -16,61 +16,45 @@ import com.example.foodstore.databinding.DialogUpdateItemBinding
 import com.example.foodstore.model.Food
 import com.example.foodstore.model.FoodDao
 import com.example.foodstore.model.MyDatabase
+import com.example.foodstore.until.showToast
 
-class MainActivity : AppCompatActivity(), FoodAdapter.FoodEvent {
-    lateinit var foodDao: FoodDao
-    lateinit var binding: ActivityMainBinding
-    lateinit var myAdpter: FoodAdapter
-    lateinit var foodList: ArrayList<Food>
+class MainActivity : AppCompatActivity(), FoodAdapter.FoodEvent,MainScreenContract.View {
+    private lateinit var binding: ActivityMainBinding
+    private lateinit var myAdapter: FoodAdapter
+    private lateinit var presenter: MainScreenContract.Presenter
+    private lateinit var foodList:ArrayList<Food>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
+        presenter=MainScreenPresenter(MyDatabase.getDatabase(this).foodDao)
         setContentView(binding.root)
-
-        foodDao = MyDatabase.getDatabase(this).foodDao
-
+        presenter.onAttach(this)
         val sharedPreferences = getSharedPreferences("FoodStore", Context.MODE_PRIVATE)
-
         if (sharedPreferences.getBoolean("first_run", true)) {
-            firstRun()
+            presenter.firstRun()
             sharedPreferences.edit().putBoolean("first_run", false).apply()
         }
 
-        showAllData()
 
         binding.btnDeleteAllFood.setOnClickListener {
-            removeAllFood()
+         presenter.onDeleteAllClicked()
         }
-
-
 
         binding.btnAddNewFood.setOnClickListener {
             addNewFood()
         }
 
         binding.editSearch.addTextChangedListener { edittextInput ->//for example 'h'
-
-            searchOnDatabase(edittextInput!!.toString())
-
-
+            presenter.onSearchFood(edittextInput.toString())
         }
 
 
     }
 
-    private fun searchOnDatabase(edittextInput: String) {
-        if (edittextInput.isNotEmpty()) {
-            val searchListFood = foodDao.searchFoods(edittextInput)
-            myAdpter.setData(searchListFood as ArrayList<Food>)
-
-
-        } else {
-            //show all data
-            val data = foodDao.getAllFood()
-            myAdpter.setData(data as ArrayList<Food>)
-        }
+    override fun onDestroy() {
+        super.onDestroy()
+        presenter.onDetach()
     }
-
 
     private fun addNewFood() {
         val dialog = AlertDialog.Builder(this).create()
@@ -104,132 +88,44 @@ class MainActivity : AppCompatActivity(), FoodAdapter.FoodEvent {
                     numOfRating = textRatingNumber,
                     rating = ratingBarStar
                 )
-                myAdpter.addFood(newFood)
-                foodDao.insertFood(newFood)
-
+                presenter.onAddNewFoodClicked(newFood)
                 dialog.dismiss()
                 binding.recyvlerMain.scrollToPosition(0)
 
             } else {
-                Toast.makeText(this, "لفطفا همه فیلد ها را پر کنید", Toast.LENGTH_SHORT).show()
+               showToast("لفطفا همه فیلد ها را پر کنید")
             }
 
         }
 
     }
 
-    private fun removeAllFood() {
-        foodDao.deleteAllFoods()
-
-        showAllData()
-    }
-
-    private fun firstRun() {
-        foodList = arrayListOf(
-            Food(
-                textSubject = "Pizza",
-                textPrice = "12",
-                textDistance = "3",
-                textCity = "Tehran",
-                urlImage = "https://www.recipetineats.com/wp-content/uploads/2020/05/Pepperoni-Pizza_5-SQjpg.jpg",
-                numOfRating = 20,
-                rating = 4.5f
-            ),
-            Food(
-                textSubject = "Lazania",
-                textPrice = "10",
-                textDistance = "5",
-                textCity = "Karaj",
-                urlImage = "https://panamag.ir/wp-content/uploads/2021/11/lazania.jpg",
-                numOfRating = 10,
-                rating = 3.5f
-            ),
-            Food(
-                textSubject = "Hamburger",
-                textPrice = "11",
-                textDistance = "7",
-                textCity = "Isfahan",
-                urlImage = "https://insanelygoodrecipes.com/wp-content/uploads/2020/10/Hamburger-with-Sesame-Seeds-Cheese-and-Veggies.png",
-                numOfRating = 50,
-                rating = 3f
-            ),
-            Food(
-                textSubject = "Falafel",
-                textPrice = "5",
-                textDistance = "2",
-                textCity = "Mashhad",
-                urlImage = "https://food.fnr.sndimg.com/content/dam/images/food/fullset/2019/5/13/0/FNK_Falafel_H1_s4x3.jpg.rend.hgtvcom.616.462.suffix/1557773603107.jpeg",
-                numOfRating = 100,
-                rating = 4.25f
-            ),
-            Food(
-                textSubject = "Sandvich Khorak",
-                textPrice = "9",
-                textDistance = "10",
-                textCity = "Kermanshah",
-                urlImage = "https://timchar.ir/zarinshahr//Opitures/116557901140210.jpg",
-                numOfRating = 65,
-                rating = 2.5f
-            ),
-            Food(
-                textSubject = "Hot Dog",
-                textPrice = "13",
-                textDistance = "3",
-                textCity = "Tehran",
-                urlImage = "https://www.thespruceeats.com/thmb/O8cBOSCu3233XKmts7kPiT-52F4=/1685x1264/smart/filters:no_upscale()/air-fryer-hot-dogs-4802499-07-b327e219937c429a81efaf61519724a5.jpg",
-                numOfRating = 55,
-                rating = 4.6f
-            ),
-            Food(
-                textSubject = "Makaroni",
-                textPrice = "14",
-                textDistance = "2.5",
-                textCity = "Kerman",
-                urlImage = "https://saten.ir/wp-content/uploads/2021/07/makarooni.jpg",
-                numOfRating = 68,
-                rating = 4f
-            )
-        )
-
-        foodDao.insertAllFood(foodList)
-    }
-
-    private fun showAllData() {
-        val foodData = foodDao.getAllFood()
-
-        myAdpter = FoodAdapter(ArrayList(foodData), this)
-        binding.recyvlerMain.adapter = myAdpter
-        binding.recyvlerMain.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
-
-        Log.v("food_log", foodData.toString())
-    }
-
+    //Adapter interfaces
     override fun onFoodClicked(food: Food, position: Int) {
         val dialog = AlertDialog.Builder(this).create()
-
-        val updateDialogBindin = DialogUpdateItemBinding.inflate(layoutInflater)
-        dialog.setView(updateDialogBindin.root)
+        val updateDialogBinding = DialogUpdateItemBinding.inflate(layoutInflater)
+        dialog.setView(updateDialogBinding.root)
         dialog.setCancelable(true)
         dialog.show()
-        updateDialogBindin.dialogEditFoodName.setText(food.textSubject)
-        updateDialogBindin.dialogEditFoodCity.setText(food.textCity)
-        updateDialogBindin.dialogEditFoodDistance.setText(food.textDistance)
-        updateDialogBindin.dialogEditFoodPrice.setText(food.textPrice)
-        updateDialogBindin.dialogUpdateBtnCancel.setOnClickListener {
+        updateDialogBinding.dialogEditFoodName.setText(food.textSubject)
+        updateDialogBinding.dialogEditFoodCity.setText(food.textCity)
+        updateDialogBinding.dialogEditFoodDistance.setText(food.textDistance)
+        updateDialogBinding.dialogEditFoodPrice.setText(food.textPrice)
+        updateDialogBinding.dialogUpdateBtnCancel.setOnClickListener {
             dialog.dismiss()
         }
-        updateDialogBindin.dialogUpdateBtnDone.setOnClickListener {
+        updateDialogBinding.dialogUpdateBtnDone.setOnClickListener {
             if (
-                updateDialogBindin.dialogEditFoodCity.length() > 0 &&
-                updateDialogBindin.dialogEditFoodDistance.length() > 0 &&
-                updateDialogBindin.dialogEditFoodName.length() > 0 &&
-                updateDialogBindin.dialogEditFoodPrice.length() > 0
+                updateDialogBinding.dialogEditFoodCity.length() > 0 &&
+                updateDialogBinding.dialogEditFoodDistance.length() > 0 &&
+                updateDialogBinding.dialogEditFoodName.length() > 0 &&
+                updateDialogBinding.dialogEditFoodPrice.length() > 0
 
             ) {
-                val textName = updateDialogBindin.dialogEditFoodName.text.toString()
-                val textPrice = updateDialogBindin.dialogEditFoodPrice.text.toString()
-                val textDistance = updateDialogBindin.dialogEditFoodDistance.text.toString()
-                val textCity = updateDialogBindin.dialogEditFoodCity.text.toString()
+                val textName = updateDialogBinding.dialogEditFoodName.text.toString()
+                val textPrice = updateDialogBinding.dialogEditFoodPrice.text.toString()
+                val textDistance = updateDialogBinding.dialogEditFoodDistance.text.toString()
+                val textCity = updateDialogBinding.dialogEditFoodCity.text.toString()
 
                 val newFood = Food(
                     id = food.id,
@@ -241,20 +137,15 @@ class MainActivity : AppCompatActivity(), FoodAdapter.FoodEvent {
                     numOfRating = food.numOfRating,
                     rating = food.rating
                 )
-
-                //update item in adapter=>
-                myAdpter.updateFood(newFood, position)
-                //update item in database
-                foodDao.updateFood(newFood)
+                presenter.onUpdateFood(newFood,position)
                 dialog.dismiss()
             } else {
-                Toast.makeText(this, "لطفا همه فیلد هارا پر کنید", Toast.LENGTH_SHORT).show()
+                showToast("لطفا همه فیلد هارا پر کنید")
             }
 
 
         }
     }
-
     override fun onFoodLongClickend(food: Food, position: Int) {
         val dialog = AlertDialog.Builder(this).create()
 
@@ -266,11 +157,30 @@ class MainActivity : AppCompatActivity(), FoodAdapter.FoodEvent {
             dialog.dismiss()
         }
         dialogDeleteBinding.dialogBtnDeleteYes.setOnClickListener {
-            myAdpter.removeFood(food, position)
-            foodDao.deleteFood(food)
+            presenter.onDeleteFood(food,position)
             dialog.dismiss()
-
         }
+    }
+
+    //Contract interface
+    override fun showFoods(data: List<Food>) {
+        foodList= ArrayList(data)
+        myAdapter= FoodAdapter(ArrayList(data),this)
+        binding.recyvlerMain.adapter=myAdapter
+        binding.recyvlerMain.layoutManager=LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false)
+
+    }
+    override fun refreshFoods(data: List<Food>) {
+        myAdapter.setData(ArrayList(data))
+    }
+    override fun addNewFood(newFood: Food) {
+        myAdapter.addFood(newFood)
+    }
+    override fun deleteFood(oldFood: Food, pos: Int) {
+        myAdapter.removeFood(oldFood,pos)
+    }
+    override fun updateFood(editingFood: Food, pos: Int) {
+        myAdapter.updateFood(editingFood,pos)
     }
 
 }
